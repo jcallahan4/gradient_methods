@@ -1,17 +1,22 @@
 # solutions.py
-"""Volume 2: Gradient Descent Methods.
-<Name>
-<Class>
-<Date>
+"""Gradient Descent Methods
+Jake Callahan
+
+Iterative optimization methods choose a search direction and a step size at each
+iteration. One choice for the search direction is the negative gradient, resulting
+in the method of steepest descent. In practice this method is often slow to converge.
+An alternative method, the conjugate gradient algorithm, uses a similar idea that
+results in much faster convergence in some situations. In this program I implement
+a method of steepest descent and two conjugate gradient methods, then apply them to
+regression problems.
 """
+
 import numpy as np
 from scipy import optimize as opt
 from scipy import linalg as la
 from autograd import numpy as anp
 from matplotlib import pyplot as plt
 
-
-# Problem 1
 def steepest_descent(f, Df, x0, tol=1e-5, maxiter=100):
     """Compute the minimizer of f using the exact method of steepest descent.
 
@@ -43,10 +48,6 @@ def steepest_descent(f, Df, x0, tol=1e-5, maxiter=100):
 
     return x0, la.norm(Df(x0)) < tol, count
 
-
-
-
-# Problem 2
 def conjugate_gradient(Q, b, x0, tol=1e-4):
     """Solve the linear system Qx = b with the conjugate gradient algorithm.
 
@@ -82,7 +83,6 @@ def conjugate_gradient(Q, b, x0, tol=1e-4):
 
     return x1, la.norm(r1) < tol , count
 
-# Problem 3
 def nonlinear_conjugate_gradient(f, Df, x0, tol=1e-5, maxiter=100):
     """Compute the minimizer of f using the nonlinear conjugate gradient
     algorithm.
@@ -123,10 +123,7 @@ def nonlinear_conjugate_gradient(f, Df, x0, tol=1e-5, maxiter=100):
 
     return x2, la.norm(r1) < tol, count-1
 
-
-
-# Problem 4
-def prob4(filename="linregression.txt",
+def linear_regression(filename="linregression.txt",
           x0=np.array([-3482258, 15, 0, -2, -1, 0, 1829])):
     """Use conjugate_gradient() to solve the linear regression problem with
     the data from the given file, the given initial guess, and the default
@@ -141,7 +138,6 @@ def prob4(filename="linregression.txt",
     #solve QTQx = b
     return conjugate_gradient(Q.T@Q,Q.T@b,x0)[0]
 
-# Problem 5
 class LogisticRegression1D:
     """Binary logistic regression classifier for one-dimensional data."""
 
@@ -173,9 +169,7 @@ class LogisticRegression1D:
         #Calculate sigma
         return 1/(1+anp.exp(-(self.B0+self.B1*x)))
 
-
-# Problem 6
-def prob6(filename="challenger.npy", guess=np.array([20., -1.])):
+def challenger_damage(filename="challenger.npy", guess=np.array([20., -1.])):
     """Return the probability of O-ring damage at 31 degrees Farenheit.
     Additionally, plot the logistic curve through the challenger data
     on the interval [30, 100].
@@ -192,7 +186,7 @@ def prob6(filename="challenger.npy", guess=np.array([20., -1.])):
     y = data[:,1]
     #Get domain to fit on
     domain = np.linspace(30,100,71)
-    #Fit and store prediction values
+    #Fit and store prediction values using LogisticRegression class
     launch = LogisticRegression1D()
     launch.fit(x,y,guess)
     vals = [launch.predict(i) for i in domain]
